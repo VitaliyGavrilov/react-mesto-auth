@@ -1,0 +1,16 @@
+.element__delete-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 18px;
+  height: 19px;
+  background-image: url("../../../img/delete-button.svg");
+  background-size: cover;
+  background-color: rgba(0, 0, 0, 0);
+  background-position: center;
+  border: none;
+  cursor: pointer;
+}
+.element__delete-button:hover {
+  opacity: 0.6;
+}

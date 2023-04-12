@@ -1,0 +1,11 @@
+.profile__no-wrap{
+  display: flex;
+  position: relative;
+}
+
+@media screen and (max-width: 864px) {
+  .profile__no-wrap {
+    margin: 0 auto 0 auto;
+    padding: 0;
+  }
+}
