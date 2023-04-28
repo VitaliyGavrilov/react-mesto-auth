@@ -117,15 +117,18 @@ function App() {
     setIsImagePopupOpen(false);
   }
   // ---Функции для логина и регистрации:
+  // --Функция для логина
   function handleLogin () {
 
   }
-
+  // --Функция для регистрации
   function handleRegister () {
 
   }
+  // --Функция для выхода из акаунта
+  function signOut () {
 
- 
+  }
 
   // ---Сборка страницы из компонентов
   return (
