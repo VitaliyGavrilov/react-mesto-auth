@@ -12,6 +12,7 @@ const Auth = ({name, title, btnText, onSubmit}) => {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    console.log(values.email, values.password);
     onSubmit(values.email, values.password);
   }
 

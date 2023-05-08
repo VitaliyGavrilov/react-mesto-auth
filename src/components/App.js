@@ -11,11 +11,15 @@ import PopupDeleteCard from './PopupDeleteCard.js';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 import api from '../utils/api.js';
 
+import * as auth from '../utils/auth';
+
 
 import { Routes, Route, Link, Navigate, useNavigate } from "react-router-dom";
 
 import ProtectRoute from './ProtectRoute.jsx';
 import Auth from './Auth.js';
+
+import InfoTooltip from './InfoTooltip';
 
 
 
@@ -26,13 +30,19 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false); // попап-Добавление карточки
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false); // попап-Редактирование аватара
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false); // попап-Увеличение изображения
+  const [isInfoTooltipPopupOpen, setInfoTooltipPopupOpen] = useState(false); // попап-Успешный/провальный логин/регистрация
+
   const [selectedCard, setSelectedCard] = useState({}); //данные-Передача данных при увеличении изображения
   const [deleteCard, setDeleteCard] = useState({}); //данные-Передача данных при удалении карточки
   const [isDeleteCardPopupOpen, setIsDeleteCardPopupOpen] = useState(false); // попап-Удаление карточки 
   const [currentUser, setCurrentUser] = useState({}); // Данные-текущие данные пользователя
-  const [cards, setCards] = useState([]);
+  const [cards, setCards] = useState([]);// Данные-карточки
 
   const [loggedIn, setLoggedIn] = useState(false);
+ 
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const [email, setEmail] = useState('');
 
 
   const navigate = useNavigate();
@@ -46,6 +56,23 @@ function App() {
       })
       .catch((err) => { console.log(`Возникла ошибка при загрузке данных, ${err}`) })
   }, [])
+
+  useEffect(() => {
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
+      auth
+        .checkToken(jwt)
+        .then((res) => {
+          setLoggedIn(true);
+          setEmail(res.data.email);
+          navigate("/");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [navigate]);
+
   // ---Функции для работы попапов и мейн:
   // --Редактирование имени и проффесии
   // -Обработчик открытия попапа редактирования профиля
@@ -95,7 +122,10 @@ function App() {
       name: cardItem.name,
       link: cardItem.link
     })
-  }
+  } 
+  // --Попап-подсказка
+  // -Обработчки открытия попапа подсказки
+  function handleInfoTooltip() { setInfoTooltipPopupOpen(true) } 
   // --Лайки
   // -Обработчик лайка
   function handleCardLike(card) {
@@ -108,6 +138,7 @@ function App() {
       })
       .catch((err) => { console.log(`Возникла ошибка при лайке, ${err}`) })
   }
+ 
   // --Функция для закрытия всех попапов
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
@@ -115,26 +146,57 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setIsDeleteCardPopupOpen(false);
     setIsImagePopupOpen(false);
+    setInfoTooltipPopupOpen(false);
   }
   // ---Функции для логина и регистрации:
   // --Функция для логина
-  function handleLogin () {
-
+  function handleLogin (email, password) {
+    auth
+      .login(email, password)
+      .then((res) => {
+        localStorage.setItem("jwt", res.token);
+        setLoggedIn(true);
+        // setEmail(email);
+        navigate("/");
+      })
+      .catch((err) => {
+        handleInfoTooltip();
+        setIsSuccess(false);
+        console.log(err);
+      });
   }
   // --Функция для регистрации
-  function handleRegister () {
-
+  function handleRegister (email, password) {
+    auth
+      .register(email, password)
+      .then(() => {
+        handleInfoTooltip();
+        setIsSuccess(true);
+        navigate("/sign-in");
+      })
+      .catch((err) => {
+        handleInfoTooltip();
+        setIsSuccess(false);
+        console.log(err);
+      })
+      .finally(() => {});
   }
   // --Функция для выхода из акаунта
   function signOut () {
-
+    localStorage.removeItem("jwt");
+    navigate("/sign-in");
+    setLoggedIn(false);
+    setEmail("");
   }
 
   // ---Сборка страницы из компонентов
   return (
     < CurrentUserContext.Provider value={currentUser} >
       <div className="page">
-        <Header/>
+        <Header
+          loggedIn={loggedIn}
+          onSignOut={signOut}
+        />
         <Routes>
           <Route path="/" element={ <ProtectRoute loggedIn={loggedIn}>
             < Main
@@ -187,6 +249,11 @@ function App() {
           isOpen={isDeleteCardPopupOpen}
           onClose={closeAllPopups}
           onConfirmationCardDelete={handleCardDelete}
+        />
+        < InfoTooltip
+          isOpen={isInfoTooltipPopupOpen}
+          onClose={closeAllPopups}
+          isSuccess={isSuccess}
         />
       </div>
     </CurrentUserContext.Provider>
