@@ -26,25 +26,23 @@ import InfoTooltip from './InfoTooltip';
 // Основной компонент, который собирает приложение
 function App() {
   // ---Cтейт-переменные:
+  // --Попапы
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false); // попап-Редактирование профиля
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false); // попап-Добавление карточки
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false); // попап-Редактирование аватара
-  const [isImagePopupOpen, setIsImagePopupOpen] = useState(false); // попап-Увеличение изображения
-  const [isInfoTooltipPopupOpen, setInfoTooltipPopupOpen] = useState(false); // попап-Успешный/провальный логин/регистрация
-
-  const [selectedCard, setSelectedCard] = useState({}); //данные-Передача данных при увеличении изображения
-  const [deleteCard, setDeleteCard] = useState({}); //данные-Передача данных при удалении карточки
-  const [isDeleteCardPopupOpen, setIsDeleteCardPopupOpen] = useState(false); // попап-Удаление карточки 
-  const [currentUser, setCurrentUser] = useState({}); // Данные-текущие данные пользователя
-  const [cards, setCards] = useState([]);// Данные-карточки
-
-  const [loggedIn, setLoggedIn] = useState(false);
- 
-  const [isSuccess, setIsSuccess] = useState(false);
-
-  const [email, setEmail] = useState('');
-
-
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);       // попап-Добавление карточки
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);   // попап-Редактирование аватара
+  const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);             // попап-Увеличение изображения
+  const [isDeleteCardPopupOpen, setIsDeleteCardPopupOpen] = useState(false);   // попап-Удаление карточки
+  const [isInfoTooltipPopupOpen, setInfoTooltipPopupOpen] = useState(false);   // попап-Успешный/провальный логин/регистрация
+  // --Данные
+  const [selectedCard, setSelectedCard] = useState({});   // данные-Передача данных при увеличении изображения
+  const [deleteCard, setDeleteCard] = useState({});       // данные-Передача данных при удалении карточки
+  const [currentUser, setCurrentUser] = useState({});     // данные-Текущие данные пользователя
+  const [cards, setCards] = useState([]);                 // данные-Карточки
+  const [email, setEmail] = useState('');                 // данные-Адрес почты
+  // --Состояния
+  const [loggedIn, setLoggedIn] = useState(false);   // состояние-Вход в акаунт
+  const [isSuccess, setIsSuccess] = useState(false); // состояние-Попытки входа в акаунт
+  // --Навигация
   const navigate = useNavigate();
 
   // ---Запрос на получение данных пользователя и карточек
@@ -56,7 +54,7 @@ function App() {
       })
       .catch((err) => { console.log(`Возникла ошибка при загрузке данных, ${err}`) })
   }, [])
-
+ // ---Если токен есть в локальном хранилише то сразу переходим на базовую страницу
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
     if (jwt) {
@@ -72,7 +70,6 @@ function App() {
         });
     }
   }, [navigate]);
-
   // ---Функции для работы попапов и мейн:
   // --Редактирование имени и проффесии
   // -Обработчик открытия попапа редактирования профиля
@@ -138,8 +135,7 @@ function App() {
       })
       .catch((err) => { console.log(`Возникла ошибка при лайке, ${err}`) })
   }
- 
-  // --Функция для закрытия всех попапов
+  // ---Функция для закрытия всех попапов
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
@@ -156,7 +152,7 @@ function App() {
       .then((res) => {
         localStorage.setItem("jwt", res.token);
         setLoggedIn(true);
-        // setEmail(email);
+        setEmail(email);
         navigate("/");
       })
       .catch((err) => {
@@ -181,14 +177,13 @@ function App() {
       })
       .finally(() => {});
   }
-  // --Функция для выхода из акаунта
+  // --Функция для выхода
   function signOut () {
     localStorage.removeItem("jwt");
     navigate("/sign-in");
     setLoggedIn(false);
     setEmail("");
   }
-
   // ---Сборка страницы из компонентов
   return (
     < CurrentUserContext.Provider value={currentUser} >
