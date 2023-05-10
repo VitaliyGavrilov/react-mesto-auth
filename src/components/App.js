@@ -41,20 +41,22 @@ function App() {
   const [email, setEmail] = useState('');                 // данные-Адрес почты
   // --Состояния
   const [loggedIn, setLoggedIn] = useState(false);   // состояние-Вход в акаунт
-  const [isSuccess, setIsSuccess] = useState(false); // состояние-Попытки входа в акаунт
+  const [isSuccess, setIsSuccess] = useState(false); // состояние-Попытка регистрации/входа
   // --Навигация
   const navigate = useNavigate();
 
-  // ---Запрос на получение данных пользователя и карточек
+  // ---Запрос на получение данных пользователя и карточек, только при успешном входе в систему
   useEffect(() => {
-    Promise.all([api.getUserInfo(), api.getInitialCards()])
-      .then(([userInfo, initialCards]) => {
-        setCurrentUser(userInfo);
-        setCards(initialCards);
-      })
-      .catch((err) => { console.log(`Возникла ошибка при загрузке данных, ${err}`) })
-  }, [])
- // ---Если токен есть в локальном хранилише то сразу переходим на базовую страницу
+    if (loggedIn) {
+      Promise.all([api.getUserInfo(), api.getInitialCards()])
+        .then(([userInfo, initialCards]) => {
+          setCurrentUser(userInfo);
+          setCards(initialCards);
+        })
+        .catch((err) => { console.log(`Возникла ошибка при загрузке данных, ${err}`) })
+    }
+  }, [loggedIn]);
+  // ---Если токен есть в локальном хранилише то сразу переходим на базовую страницу
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
     if (jwt) {
