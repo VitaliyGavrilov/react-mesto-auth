@@ -15,8 +15,9 @@ function Header ({loggedIn, onSignOut}) {
         />
         <Route path="/" element={
           <div>
-
-          </div>}
+            <button onClick={onSignOut}>Выйти</button>
+            <p>майл</p>
+          </div>} 
         />
       </Routes>
     </header>
