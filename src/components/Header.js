@@ -2,7 +2,7 @@ import headerLogo from '../img/logo.svg';
 import React, {useState} from 'react';
 import {Routes, Route, Link} from "react-router-dom";
 
-function Header ({loggedIn, onSignOut}) {
+function Header ({loggedIn, onSignOut, mail}) {
   return (
     <header className="header">
       <img src={ headerLogo } className="header__logo" alt="Логотип проекта Mesto" />
@@ -14,9 +14,9 @@ function Header ({loggedIn, onSignOut}) {
           <Link className="header__link" to="/sign-in">Войти</Link>}
         />
         <Route path="/" element={
-          <div>
-            <button onClick={onSignOut}>Выйти</button>
-            <p>майл</p>
+          <div className='header__auth-box'>
+            <p className='header__mail'>{mail}</p>
+            <button className='header__exit-button' onClick={onSignOut}>Выйти</button>
           </div>} 
         />
       </Routes>

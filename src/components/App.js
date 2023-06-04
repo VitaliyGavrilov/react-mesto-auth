@@ -32,7 +32,7 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);   // попап-Редактирование аватара
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);             // попап-Увеличение изображения
   const [isDeleteCardPopupOpen, setIsDeleteCardPopupOpen] = useState(false);   // попап-Удаление карточки
-  const [isInfoTooltipPopupOpen, setInfoTooltipPopupOpen] = useState(false);   // попап-Успешный/провальный логин/регистрация
+  const [isInfoTooltipPopupOpen, setInfoTooltipPopupOpen] = useState(true);   // попап-Успешный/провальный логин/регистрация
   // --Данные
   const [selectedCard, setSelectedCard] = useState({});   // данные-Передача данных при увеличении изображения
   const [deleteCard, setDeleteCard] = useState({});       // данные-Передача данных при удалении карточки
@@ -193,6 +193,7 @@ function App() {
         <Header
           loggedIn={loggedIn}
           onSignOut={signOut}
+          mail={email}
         />
         <Routes>
           <Route path="/" element={ <ProtectRoute loggedIn={loggedIn}>

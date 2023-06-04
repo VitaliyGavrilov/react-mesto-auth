@@ -1,0 +1,17 @@
+.header__exit-button {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  color: #A9A9A9;
+  background-color: transparent;
+  border: none;
+  transition: opacity .3s linear;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+  
+.header__button-exit:hover {
+  opacity: .6;
+}
