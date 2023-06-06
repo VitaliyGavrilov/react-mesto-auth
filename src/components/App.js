@@ -1,5 +1,8 @@
 // Импорты
+//Библиотеки
 import React, { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate } from "react-router-dom";
+//Компоненты
 import Header from './Header.js';
 import Main from './Main.js';
 import Footer from './Footer.js';
@@ -8,21 +11,14 @@ import PopupAddCard from './PopupAddCard.js';
 import PopupEditAvatar from './PopupEditAvatar.js';
 import PopupImage from './PopupImage.js';
 import PopupDeleteCard from './PopupDeleteCard.js';
-import CurrentUserContext from '../contexts/CurrentUserContext';
-import api from '../utils/api.js';
-
-import * as auth from '../utils/auth';
-
-
-import { Routes, Route, Link, Navigate, useNavigate } from "react-router-dom";
-
 import ProtectRoute from './ProtectRoute.jsx';
 import Auth from './Auth.js';
-
 import InfoTooltip from './InfoTooltip';
-
-
-
+//Утилиты
+import api from '../utils/api.js';
+import * as auth from '../utils/auth';
+//Контекст
+import CurrentUserContext from '../contexts/CurrentUserContext';
 // Основной компонент, который собирает приложение
 function App() {
   // ---Cтейт-переменные:
@@ -32,7 +28,7 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);   // попап-Редактирование аватара
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);             // попап-Увеличение изображения
   const [isDeleteCardPopupOpen, setIsDeleteCardPopupOpen] = useState(false);   // попап-Удаление карточки
-  const [isInfoTooltipPopupOpen, setInfoTooltipPopupOpen] = useState(true);   // попап-Успешный/провальный логин/регистрация
+  const [isInfoTooltipPopupOpen, setInfoTooltipPopupOpen] = useState(false);   // попап-Успешный/провальный логин/регистрация
   // --Данные
   const [selectedCard, setSelectedCard] = useState({});   // данные-Передача данных при увеличении изображения
   const [deleteCard, setDeleteCard] = useState({});       // данные-Передача данных при удалении карточки
@@ -44,7 +40,6 @@ function App() {
   const [isSuccess, setIsSuccess] = useState(false); // состояние-Попытка регистрации/входа
   // --Навигация
   const navigate = useNavigate();
-
   // ---Запрос на получение данных пользователя и карточек, только при успешном входе в систему
   useEffect(() => {
     if (loggedIn) {
@@ -56,7 +51,7 @@ function App() {
         .catch((err) => { console.log(`Возникла ошибка при загрузке данных, ${err}`) })
     }
   }, [loggedIn]);
-  // ---Если токен есть в локальном хранилише то сразу переходим на базовую страницу
+  // ---Если токен есть в локальном хранилише то переходим на базовую страницу
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
     if (jwt) {
@@ -179,7 +174,7 @@ function App() {
       })
       .finally(() => {});
   }
-  // --Функция для выхода
+  // --Функция для выхода из аккаунта
   function signOut () {
     localStorage.removeItem("jwt");
     navigate("/sign-in");
@@ -191,7 +186,6 @@ function App() {
     < CurrentUserContext.Provider value={currentUser} >
       <div className="page">
         <Header
-          loggedIn={loggedIn}
           onSignOut={signOut}
           mail={email}
         />

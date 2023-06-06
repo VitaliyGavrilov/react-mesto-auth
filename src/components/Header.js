@@ -1,17 +1,17 @@
 import headerLogo from '../img/logo.svg';
-import React, {useState} from 'react';
+import React from 'react';
 import {Routes, Route, Link} from "react-router-dom";
 
-function Header ({loggedIn, onSignOut, mail}) {
+function Header ({onSignOut, mail}) {
   return (
     <header className="header">
       <img src={ headerLogo } className="header__logo" alt="Логотип проекта Mesto" />
       <Routes>
         <Route path="/sign-in" element={
-          <Link className="header__link" to="/sign-up">Регистрация</Link>}
+          <Link className="header__auth-link" to="/sign-up">Регистрация</Link>}
         />
         <Route path="sign-up" element={
-          <Link className="header__link" to="/sign-in">Войти</Link>}
+          <Link className="header__auth-link" to="/sign-in">Войти</Link>}
         />
         <Route path="/" element={
           <div className='header__auth-box'>

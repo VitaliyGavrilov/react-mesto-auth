@@ -1,0 +1,9 @@
+.header__auth-link {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  text-align: right;
+  margin: auto 0;
+}

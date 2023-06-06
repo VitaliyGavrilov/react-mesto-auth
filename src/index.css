@@ -9,6 +9,7 @@
 @import url(./blocks//header/__auth-box/header__auth-box.css);
 @import url(./blocks//header/__mail/header__mail.css);
 @import url(./blocks//header/__exit-button/header__exit-button.css);
+@import url(./blocks/header/__auth-link/header__auth-link.css);
 /* profile */
 @import url(./blocks/profile/profile.css);
 @import url(./blocks/profile/__info/profile__info.css);
@@ -54,10 +55,15 @@
 @import url(./blocks/popup/__save-button/_disabled/popup__save-button_disabled.css);
 @import url(./blocks/popup/__img/_place/popup__img_place_info-tooltip.css);
 @import url(./blocks/popup/__title/_place/popup__title_place_info-tooltip.css);
-
-
+/* auth */
 @import url(./blocks/auth/auth.css);
-
+@import url(./blocks/auth/__block/auth__block.css);
+@import url(./blocks/auth/__btn-submit/auth__btn-submit.css);
+@import url(./blocks/auth/__fieldset/auth__fieldset.css);
+@import url(./blocks/auth/__form/auth__form.css);
+@import url(./blocks/auth/__input/auth__input.css);
+@import url(./blocks/auth/__link/auth__link.css);
+@import url(./blocks/auth/__title/auth__title.css);
 
 
 
