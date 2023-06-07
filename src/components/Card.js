@@ -24,7 +24,7 @@ function Card(props) {
         <h2 className="element__name">{props.name}</h2>
         <div className="element__like-block">
           <button className={cardLikeButtonClassName} type="button" aria-label="Кнопка лайка" onClick={handleLikeCardClick}></button>
-          <span className="element__likes-number">{props.like > 0 ? props.like : null}</span>
+          <span className="element__likes-number">{props.likesCount > 0 ? props.likesCount : null}</span>
         </div>
       </div>
     </div>

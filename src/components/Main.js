@@ -30,7 +30,7 @@ function Main(props) {
             key={cardItem._id}
             link={cardItem.link}
             name={cardItem.name}
-            like={cardItem.likes.length}
+            likesCount={cardItem.likes.length}
             card={cardItem}
             onCardClick={props.onCardClick}
             onCardDelete={props.onCardDelete}

@@ -1,7 +1,7 @@
 // Импорты
 //Библиотеки
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 //Компоненты
 import Header from './Header.js';
 import Main from './Main.js';
@@ -12,13 +12,14 @@ import PopupEditAvatar from './PopupEditAvatar.js';
 import PopupImage from './PopupImage.js';
 import PopupDeleteCard from './PopupDeleteCard.js';
 import ProtectRoute from './ProtectRoute.jsx';
-import Auth from './Auth.js';
 import InfoTooltip from './InfoTooltip';
 //Утилиты
 import api from '../utils/api.js';
 import * as auth from '../utils/auth';
 //Контекст
 import CurrentUserContext from '../contexts/CurrentUserContext';
+import Login from './Login.js';
+import Register from './Register.js';
 // Основной компонент, который собирает приложение
 function App() {
   // ---Cтейт-переменные:
@@ -37,7 +38,7 @@ function App() {
   const [email, setEmail] = useState('');                 // данные-Адрес почты
   // --Состояния
   const [loggedIn, setLoggedIn] = useState(false);   // состояние-Вход в акаунт
-  const [isSuccess, setIsSuccess] = useState(false); // состояние-Попытка регистрации/входа
+  const [isSuccessInfoTooltipStatus, setIsSuccessInfoTooltipStatus] = useState(false); // состояние-Попытка регистрации/входа
   // --Навигация
   const navigate = useNavigate();
   // ---Запрос на получение данных пользователя и карточек, только при успешном входе в систему
@@ -74,7 +75,10 @@ function App() {
   // -Обработчик сабмита данных пользователя
   function handleUpdateUser(userItem) {
     api.patchUserInfo(userItem.name, userItem.about)
-      .then((res) => { setCurrentUser(res); closeAllPopups() })
+      .then((res) => { 
+        setCurrentUser(res); 
+        closeAllPopups();
+      })
       .catch((err) => { console.log(`Возникла ошибка при редактировании профиля, ${err}`) })
   }
   // --Добавление карточек
@@ -83,7 +87,10 @@ function App() {
   // -Обработчик сабмита добавления карточки
   function handleAddCard(cardItem) {
     api.postCard({ name: cardItem.name, link: cardItem.link })
-      .then((card) => { setCards([card, ...cards]); closeAllPopups() })
+      .then((card) => { 
+        setCards([card, ...cards]);
+        closeAllPopups(); 
+      })
       .catch((err) => { console.log(`Возникла ошибка при добавлении новой карточки, ${err}`) })
   }
   // --Редактирование аватара
@@ -92,7 +99,10 @@ function App() {
   // -Обработчик сабмита аватара
   function handleUpdateAvatar(link) {
     api.patchUserAvatar(link)
-      .then((res) => { setCurrentUser(res); closeAllPopups() })
+      .then((res) => { 
+        setCurrentUser(res);
+        closeAllPopups();
+      })
       .catch((err) => { console.log(`Возникла ошибка при зименении аватара, ${err}`) })
   }
   // --Удаление карточек
@@ -104,7 +114,10 @@ function App() {
   // -Обработчик удаления карточки
   function handleCardDelete({ card }) {
     api.deleteCard(card._id)
-      .then(() => { setCards((cardsArray) => cardsArray.filter((cardItem) => cardItem._id !== card._id)); closeAllPopups() })
+      .then(() => { 
+        setCards((cardsArray) => cardsArray.filter((cardItem) => cardItem._id !== card._id));
+        closeAllPopups();
+      })
       .catch((err) => { console.log(`Возникла ошибка при удалении карточки, ${err}`) })
   }
   // --Фото-попап
@@ -119,7 +132,7 @@ function App() {
   } 
   // --Попап-подсказка
   // -Обработчки открытия попапа подсказки
-  function handleInfoTooltip() { setInfoTooltipPopupOpen(true) } 
+  function openInfoTooltip() { setInfoTooltipPopupOpen(true) } 
   // --Лайки
   // -Обработчик лайка
   function handleCardLike(card) {
@@ -153,8 +166,8 @@ function App() {
         navigate("/");
       })
       .catch((err) => {
-        handleInfoTooltip();
-        setIsSuccess(false);
+        openInfoTooltip();
+        setIsSuccessInfoTooltipStatus(false);
         console.log(err);
       });
   }
@@ -163,16 +176,16 @@ function App() {
     auth
       .register(email, password)
       .then(() => {
-        handleInfoTooltip();
-        setIsSuccess(true);
+        setIsSuccessInfoTooltipStatus(true);
         navigate("/sign-in");
       })
       .catch((err) => {
-        handleInfoTooltip();
-        setIsSuccess(false);
+        setIsSuccessInfoTooltipStatus(false);
         console.log(err);
       })
-      .finally(() => {});
+      .finally(() => {
+        openInfoTooltip();
+      });
   }
   // --Функция для выхода из аккаунта
   function signOut () {
@@ -201,18 +214,15 @@ function App() {
               cards={cards}/></ProtectRoute>}
           />
           <Route path="/sign-in" element={
-            <Auth
-              onSubmit={handleLogin}
-              name='login'
-              title='Вход'
-              btnText='Войти' />}
+            <Login
+              onSubmit={handleLogin} />}
           />
           <Route path="/sign-up" element={
-            <Auth
-              onSubmit={handleRegister}
-              name='register'
-              title='Регистрация'
-              btnText='Зарегистрироваться' />}
+            <Register
+              onSubmit={handleRegister} />}
+          />
+          <Route path="*" element={
+            loggedIn ? <Navigate to="/" /> : <Navigate to="/sign-in"/>}
           />
         </Routes>
         < Footer />
@@ -245,7 +255,7 @@ function App() {
         < InfoTooltip
           isOpen={isInfoTooltipPopupOpen}
           onClose={closeAllPopups}
-          isSuccess={isSuccess}
+          isSuccessInfoTooltipStatus={isSuccessInfoTooltipStatus}
         />
       </div>
     </CurrentUserContext.Provider>
